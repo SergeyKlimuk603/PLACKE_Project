@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Start_Date__c</fullName>
+    <description>Defines the date from which the audit trail should be checked; if the field is empty, the last 30 days will be checked automatically.</description>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <inlineHelpText>Defines the date from which the audit trail should be checked; if the field is empty, the last 30 days will be checked automatically.</inlineHelpText>
+    <label>Start Date</label>
+    <required>false</required>
+    <type>Date</type>
+</CustomField>
