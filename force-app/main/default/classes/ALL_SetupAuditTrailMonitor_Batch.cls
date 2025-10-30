@@ -21,6 +21,7 @@ public class ALL_SetupAuditTrailMonitor_Batch implements Database.Batchable<SObj
         for (ALL_AuditTrailConfig__mdt cfg : [
             SELECT Keyword__c, Recipients__c, Start_Date__c, Exclude_Users__c
             FROM   ALL_AuditTrailConfig__mdt
+            WHERE Active__c = true
         ]) {
             if (String.isNotBlank(cfg.Keyword__c)) {
                 for (String kw : cfg.Keyword__c.split(';')) {
