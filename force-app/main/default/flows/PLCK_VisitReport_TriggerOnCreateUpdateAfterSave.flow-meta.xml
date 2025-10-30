@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>60.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>assign_DistributionList</name>
+        <label>Distribution List</label>
+        <locationX>1663</locationX>
+        <locationY>320</locationY>
+        <assignmentItems>
+            <assignToReference>recordVisitReport.PLCK_DistributionList__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>get_DistributionList.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>decision_Update_EmailContent_0</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>assign_EmailContent</name>
+        <label>Email Content</label>
+        <locationX>1664</locationX>
+        <locationY>10</locationY>
+        <assignmentItems>
+            <assignToReference>recordVisitReport.PLCK_EmailBody__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>EmailBody</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>recordVisitReport.PLCK_EmailSubject__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>EmailSubject</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>update_VisitReport</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Visit_Report_to_Variable</name>
+        <label>Visit Report to Variable</label>
+        <locationX>965</locationX>
+        <locationY>202</locationY>
+        <assignmentItems>
+            <assignToReference>recordVisitReport</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Distribution_List_Empty</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>decision_Found_DistributionList</name>
+        <label>Found Distribution List</label>
+        <locationX>1475</locationX>
+        <locationY>321</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>TRUE_Found_DistributionList</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>get_DistributionList</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>assign_DistributionList</targetReference>
+            </connector>
+            <label>TRUE</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>decision_Update_EmailContent</name>
+        <label>Update Email Content</label>
+        <locationX>1100</locationX>
+        <locationY>12</locationY>
+        <defaultConnectorLabel>FALSE</defaultConnectorLabel>
+        <rules>
+            <name>TRUE_Update_EmailContent</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>recordVisitReport.PLCK_UpdateEmailBody__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>assign_EmailContent</targetReference>
+            </connector>
+            <label>TRUE</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>decision_Update_EmailContent_0</name>
+        <label>Update Email Content</label>
+        <locationX>1653</locationX>
+        <locationY>183</locationY>
+        <defaultConnector>
+            <targetReference>update_VisitReport</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>FALSE</defaultConnectorLabel>
+        <rules>
+            <name>TRUE_Update_EmailContent_0</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>recordVisitReport.PLCK_UpdateEmailBody__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>assign_EmailContent</targetReference>
+            </connector>
+            <label>TRUE</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Distribution_List_Empty</name>
+        <label>Distribution List Empty</label>
+        <locationX>1099</locationX>
+        <locationY>204</locationY>
+        <defaultConnector>
+            <targetReference>decision_Update_EmailContent</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>List is Set</defaultConnectorLabel>
+        <rules>
+            <name>TRUE_DistributionListEmpty</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.PLCK_DistributionList__c</leftValueReference>
+                <operator>IsBlank</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>get_DistributionList</targetReference>
+            </connector>
+            <label>TRUE</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <formulas>
+        <name>EmailBody</name>
+        <dataType>String</dataType>
+        <expression>{!VisitReport_EmailBody_Header}+
+
+&quot;------------------------------&quot;+
+IF( ISBLANK( {!recordVisitReport.OwnerId} ), &quot;&quot;, {!VisitReport_EmailBody_Owner} )+
+IF( ISBLANK( {!recordVisitReport.PLCK_Subject__c} ), &quot;&quot;, {!VisitReport_EmailBody_Subject} )+
+IF( ISBLANK( {!recordVisitReport.PLCK_Account__r.Name} ), &quot;&quot;, {!VisitReport_EmailBody_Account} )+
+IF( ISBLANK( {!recordVisitReport.PLCK_StartDate__c} ), &quot;&quot;,{!VisitReport_EmailBody_StartDate} )+
+IF( ISBLANK( {!recordVisitReport.PLCK_EndDate__c} ), &quot;&quot;,{!VisitReport_EmailBody_EndDate} )+
+IF( ISBLANK( {!recordVisitReport.PLCK_LabOrder__c} ), &quot;&quot;,{!VisitReport_EmailBody_LabOrder} )+
+IF( ISBLANK( {!recordVisitReport.PLCK_Claim__c} ), &quot;&quot;,{!VisitReport_EmailBody_Claim} )+
+
+IF( ISBLANK( {!recordVisitReport.PLCK_BackgroundInformation__c}), &quot;&quot;, {!VisitReport_EmailBody_BackgroundInformation} )+
+IF( ISBLANK( {!recordVisitReport.PLCK_NextSteps__c} ), &quot;&quot;, {!VisitReport_EmailBody_NextSteps} )+
+IF( ISBLANK( {!recordVisitReport.PLCK_Problem__c} ), &quot;&quot;, {!VisitReport_EmailBody_Problem} )+
+IF( ISBLANK( {!recordVisitReport.PLCK_Action__c} ), &quot;&quot;, {!VisitReport_EmailBody_Action} )+
+IF( ISBLANK( {!recordVisitReport.PLCK_Note__c} ), &quot;&quot;, {!VisitReport_EmailBody_Note} )+
+&quot;------------------------------&quot;+
+{!VisitReport_EmailBody_Footer}</expression>
+    </formulas>
+    <formulas>
+        <name>EmailSubject</name>
+        <dataType>String</dataType>
+        <expression>{!recordVisitReport.Name} &amp;&quot; | &quot;&amp; {!recordVisitReport.PLCK_Account__r.Name} &amp;&quot; | &quot;&amp;TEXT(YEAR({!recordVisitReport.PLCK_StartDate__c}))&amp;&quot;-&quot;&amp;TEXT(MONTH({!recordVisitReport.PLCK_StartDate__c}))&amp;&quot;-&quot;&amp;TEXT(DAY({!recordVisitReport.PLCK_StartDate__c}))</expression>
+    </formulas>
+    <interviewLabel>PLCK Visit Report TriggerOnCreateUpdateAfterSave {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>PLCK Visit Report TriggerOnCreateUpdateAfterSave</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>get_DistributionList</name>
+        <label>Distribution List</label>
+        <locationX>1349</locationX>
+        <locationY>319</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>decision_Found_DistributionList</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>PLCK_BusinessSegment__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordVisitReport.PLCK_Account__r.PLCK_BusinessSegment__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>PLCK_DistributionList__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>update_VisitReport</name>
+        <label>Visit Report</label>
+        <locationX>1862</locationX>
+        <locationY>169</locationY>
+        <inputReference>recordVisitReport</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>514</locationX>
+        <locationY>114</locationY>
+        <connector>
+            <targetReference>Visit_Report_to_Variable</targetReference>
+        </connector>
+        <object>PLCK_VisitReport__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>VisitReport_EmailBody_Account</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;&lt;strong&gt;Account: &lt;/strong&gt;{!recordVisitReport.PLCK_Account__r.Name} &lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>VisitReport_EmailBody_Action</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;------------------------------&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Action&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;{!recordVisitReport.PLCK_Action__c}&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>VisitReport_EmailBody_BackgroundInformation</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;------------------------------&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Background Information&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;{!recordVisitReport.PLCK_BackgroundInformation__c}&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>VisitReport_EmailBody_Claim</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;&lt;strong&gt;Claim: &lt;/strong&gt;{!recordVisitReport.PLCK_Claim__c}&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>VisitReport_EmailBody_EndDate</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;&lt;strong&gt;End Date: &lt;/strong&gt;{!recordVisitReport.PLCK_EndDate__c}&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>VisitReport_EmailBody_Footer</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;Kind regards,&lt;/p&gt;&lt;p&gt;{!$User.FirstName} {!$User.LastName}&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>VisitReport_EmailBody_Header</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;Hello everyone,&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;This is a summary of a Visit Report.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>VisitReport_EmailBody_LabOrder</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;&lt;strong&gt;Lab Order: &lt;/strong&gt;{!recordVisitReport.PLCK_LabOrder__c}&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>VisitReport_EmailBody_NextSteps</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;------------------------------&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Next Steps&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;{!recordVisitReport.PLCK_NextSteps__c}&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>VisitReport_EmailBody_Note</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;------------------------------&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Note&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;{!recordVisitReport.PLCK_Note__c}&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>VisitReport_EmailBody_Owner</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;&lt;strong&gt;Owner:&lt;/strong&gt; {!recordVisitReport.Owner:User.FirstName} {!recordVisitReport.Owner:User.LastName}&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>VisitReport_EmailBody_Problem</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;------------------------------&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Problem&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;{!recordVisitReport.PLCK_Problem__c}&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>VisitReport_EmailBody_Project</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;&lt;strong&gt;Project: &lt;/strong&gt;{!recordVisitReport.PLCK_Project__r.Name}&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>VisitReport_EmailBody_StartDate</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;&lt;strong&gt;Start Date: &lt;/strong&gt;{!recordVisitReport.PLCK_StartDate__c}&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>VisitReport_EmailBody_Subject</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;&lt;strong&gt;Subject: &lt;/strong&gt;{!recordVisitReport.PLCK_Subject__c}&lt;/p&gt;</text>
+    </textTemplates>
+    <variables>
+        <name>recordVisitReport</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+        <objectType>PLCK_VisitReport__c</objectType>
+    </variables>
+</Flow>
