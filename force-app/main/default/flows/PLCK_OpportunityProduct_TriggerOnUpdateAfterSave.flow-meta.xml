@@ -5,13 +5,13 @@
     <assignments>
         <name>assign_Snapshot_Product_Values</name>
         <label>Snapshot Product Values</label>
-        <locationX>1084</locationX>
-        <locationY>521</locationY>
+        <locationX>50</locationX>
+        <locationY>539</locationY>
         <assignmentItems>
             <assignToReference>recordSnapshotProduct.PLCK_Snapshot__c</assignToReference>
             <operator>Assign</operator>
             <value>
-                <elementReference>get_Snapshot.Id</elementReference>
+                <elementReference>get_OpportunitySnapshotProduct.PLCK_Snapshot__c</elementReference>
             </value>
         </assignmentItems>
         <assignmentItems>
@@ -54,25 +54,25 @@
         </connector>
     </assignments>
     <decisions>
-        <name>Found_Snapshot_Product</name>
-        <label>Found Snapshot Product</label>
-        <locationX>732</locationX>
-        <locationY>522</locationY>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <name>Opportunity_Product_has_a_Snapshot_Product</name>
+        <label>Opportunity Product has a Snapshot Product</label>
+        <locationX>182</locationX>
+        <locationY>431</locationY>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
         <rules>
-            <name>false</name>
+            <name>Yes</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>get_SnapshotProduct</leftValueReference>
+                <leftValueReference>get_OpportunitySnapshotProduct.Id</leftValueReference>
                 <operator>IsNull</operator>
                 <rightValue>
-                    <booleanValue>true</booleanValue>
+                    <booleanValue>false</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>get_Snapshot</targetReference>
+                <targetReference>assign_Snapshot_Product_Values</targetReference>
             </connector>
-            <label>false</label>
+            <label>Yes</label>
         </rules>
     </decisions>
     <environments>Default</environments>
@@ -87,7 +87,7 @@
     <processMetadataValues>
         <name>CanvasMode</name>
         <value>
-            <stringValue>FREE_FORM_CANVAS</stringValue>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
         </value>
     </processMetadataValues>
     <processMetadataValues>
@@ -100,39 +100,18 @@
     <recordCreates>
         <name>create_Snapshot_Product</name>
         <label>Snapshot Product</label>
-        <locationX>1228</locationX>
-        <locationY>521</locationY>
+        <locationX>50</locationX>
+        <locationY>647</locationY>
         <inputReference>recordSnapshotProduct</inputReference>
     </recordCreates>
     <recordLookups>
-        <name>get_Snapshot</name>
-        <label>Snapshot</label>
-        <locationX>920</locationX>
-        <locationY>521</locationY>
+        <name>get_OpportunitySnapshotProduct</name>
+        <label>Opportunity Snapshot Product</label>
+        <locationX>182</locationX>
+        <locationY>323</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>assign_Snapshot_Product_Values</targetReference>
-        </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>PLCK_Opportunity__c</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>$Record.OpportunityId</elementReference>
-            </value>
-        </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>PLCK_OpportunitySnapshot__c</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
-    <recordLookups>
-        <name>get_SnapshotProduct</name>
-        <label>Snapshot Product</label>
-        <locationX>740</locationX>
-        <locationY>373</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Found_Snapshot_Product</targetReference>
+            <targetReference>Opportunity_Product_has_a_Snapshot_Product</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -147,16 +126,16 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <start>
-        <locationX>616</locationX>
-        <locationY>48</locationY>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
         <connector>
-            <targetReference>get_SnapshotProduct</targetReference>
+            <targetReference>get_OpportunitySnapshotProduct</targetReference>
         </connector>
         <object>OpportunityLineItem</object>
         <recordTriggerType>Update</recordTriggerType>
         <triggerType>RecordAfterSave</triggerType>
     </start>
-    <status>Active</status>
+    <status>Obsolete</status>
     <variables>
         <name>recordSnapshotProduct</name>
         <dataType>SObject</dataType>
