@@ -38,8 +38,9 @@ public with sharing class PLCK_AccountServiceTest {
         User u = PLCK_TestDataFactory.createStandardUser('System Administrator');
         System.runAs(u) {
             List<Account> accounts = PLCK_TestDataFactory.prepareAccounts(1, null);
-            Id activeCustomerRecTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PLCK_ActiveCustomer').getRecordTypeId();
-            accounts[0].RecordTypeId = activeCustomerRecTypeId;
+            Id customerRecTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Customer').getRecordTypeId();
+            accounts[0].RecordTypeId = customerRecTypeId;
+            accounts[0].Status__c = PLCK_AccountService.CUSTOMER_STATUS_ACTIVE;
             accounts[0].PLCK_ERPSalesrepNumber__c = '9999';
 
             Test.startTest();
@@ -75,10 +76,11 @@ public with sharing class PLCK_AccountServiceTest {
     @IsTest
     static void assignPricebookForVisionCustomer() {
         List<Account> accounts = PLCK_TestDataFactory.prepareAccounts(1, null);
-        Id activeCustomerRecTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PLCK_ActiveCustomer').getRecordTypeId();
+        Id customerRecTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Customer').getRecordTypeId();
         
         String visionSalesOrg = 'US';
-        accounts[0].RecordTypeId = activeCustomerRecTypeId;
+        accounts[0].RecordTypeId = customerRecTypeId;
+        accounts[0].Status__c = PLCK_AccountService.CUSTOMER_STATUS_ACTIVE;
         accounts[0].PLCK_SalesOrganisation_ERP__c = visionSalesOrg;
 
         Test.startTest();

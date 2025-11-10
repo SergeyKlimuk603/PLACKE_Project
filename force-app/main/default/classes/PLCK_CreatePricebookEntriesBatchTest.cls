@@ -1,6 +1,8 @@
 @isTest
 public class PLCK_CreatePricebookEntriesBatchTest {
 
+    private static final String CUSTOMER_STATUS_ACTIVE = 'Active';
+
     @isTest
     private static void createPricebookEntriesBatch_test(){
         // List<Pricebook2> pricebooks = new List<Pricebook2>{
@@ -11,10 +13,13 @@ public class PLCK_CreatePricebookEntriesBatchTest {
         PLCK_TestDataFactory.createPricebookForProspectAccounts();
 
         List<Account> accounts = PLCK_TestDataFactory.prepareAccounts(2, null);
-        Id activeCustomerRecTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PLCK_ActiveCustomer').getRecordTypeId();
-        accounts[0].RecordTypeId = activeCustomerRecTypeId;
+        Id customerRecTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Customer').getRecordTypeId();
+        accounts[0].RecordTypeId = customerRecTypeId;
+        accounts[0].Status__c = CUSTOMER_STATUS_ACTIVE;
+        
         //accounts[0].PLCK_Pricebook__c = pricebooks[0].Id;
-        accounts[1].RecordTypeId = activeCustomerRecTypeId;
+        accounts[1].RecordTypeId = customerRecTypeId;
+        accounts[1].Status__c = CUSTOMER_STATUS_ACTIVE;
         //accounts[1].PLCK_Pricebook__c = pricebooks[1].Id;
         insert accounts;
 

@@ -6,6 +6,7 @@ public with sharing class PLCK_AccountService {
     public static final String BUSINESS_SEGMENT_LIFESTYLE = 'Lifestyle';
     public static final String BUSINESS_SEGMENT_GLASS = 'Glass Cosmetics';
     public static final String BUSINESS_SEGMENT_AVIATION = 'Aviation';
+    public static final String CUSTOMER_STATUS_ACTIVE = 'Active';
 
     /*public static final Map<String, String> SALES_ORGANISATION_MAPPING_FROM_ERP = new Map<String, String>{
             '100' => BUSINESS_SEGMENT_AUTOMOTIVE,
@@ -95,10 +96,10 @@ public with sharing class PLCK_AccountService {
     }
 
     public static void setAccountOwner(List<Account> accounts, Map<Id, Account> oldAccounts) {
-        Id activeCustomerRecTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PLCK_ActiveCustomer').getRecordTypeId();
+        Id customerRecTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Customer').getRecordTypeId();
         Set<String> erpSalesRepNumbers = new Set<String>();
         for(Account acc : accounts) {
-            if(acc.RecordTypeId == activeCustomerRecTypeId && acc.PLCK_ERPSalesrepNumber__c != null && (oldAccounts == null || acc.PLCK_ERPSalesrepNumber__c != oldAccounts.get(acc.Id).PLCK_ERPSalesrepNumber__c)) {
+            if(acc.RecordTypeId == customerRecTypeId && acc.Status__c == CUSTOMER_STATUS_ACTIVE && acc.PLCK_ERPSalesrepNumber__c != null && (oldAccounts == null || acc.PLCK_ERPSalesrepNumber__c != oldAccounts.get(acc.Id).PLCK_ERPSalesrepNumber__c)) {
                 erpSalesRepNumbers.add(acc.PLCK_ERPSalesrepNumber__c);
             }
         }
@@ -108,7 +109,7 @@ public with sharing class PLCK_AccountService {
                 erpNumberToUserMap.put(u.PLCK_ERPUserNumber__c, u);
             }
             for(Account acc : accounts) {
-                if(acc.RecordTypeId == activeCustomerRecTypeId && acc.PLCK_ERPSalesrepNumber__c != null && (oldAccounts == null || acc.PLCK_ERPSalesrepNumber__c != oldAccounts.get(acc.Id).PLCK_ERPSalesrepNumber__c)) {
+                if(acc.RecordTypeId == customerRecTypeId && acc.Status__c == CUSTOMER_STATUS_ACTIVE && acc.PLCK_ERPSalesrepNumber__c != null && (oldAccounts == null || acc.PLCK_ERPSalesrepNumber__c != oldAccounts.get(acc.Id).PLCK_ERPSalesrepNumber__c)) {
                     if(erpNumberToUserMap.containsKey(acc.PLCK_ERPSalesrepNumber__c)) {
                         acc.OwnerId = erpNumberToUserMap.get(acc.PLCK_ERPSalesrepNumber__c).Id;
                     }
@@ -130,13 +131,13 @@ public with sharing class PLCK_AccountService {
     }
 
     public static void assignSalesOrgPricebookToCustomer(List<Account> accounts, Map<Id, Account> oldAccounts) {
-        Id activeCustomerRecTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PLCK_ActiveCustomer').getRecordTypeId();
+        Id customerRecTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Customer').getRecordTypeId();
         
         List<Account> accountsToAssignPricebook = new List<Account>();
         Set<String> salesOrgs = new Set<String>();
         Set<String> visionSalesOrgs = new Set<String>();
         for (Account acc : accounts) {
-            if (((oldAccounts == null && acc.RecordTypeId == activeCustomerRecTypeId) 
+            if (((oldAccounts == null && acc.RecordTypeId == customerRecTypeId && acc.Status__c == CUSTOMER_STATUS_ACTIVE) 
                 ||(oldAccounts != null && acc.RecordTypeId != oldAccounts.get(acc.Id).RecordTypeId))
                 ) {
                     accountsToAssignPricebook.add(acc);

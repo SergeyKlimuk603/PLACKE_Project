@@ -1,11 +1,14 @@
 @IsTest
 public with sharing class PLCK_PriceLineServiceTest {
 
+    private static final String CUSTOMER_STATUS_ACTIVE = 'Active';
+
     @isTest
     private static void linkPriceLineToAccountTest(){
         Account acc = PLCK_TestDataFactory.prepareAccounts(1, '000')[0];
         acc.PLCK_ExternalID__c = '00000000_1020';
-        acc.RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PLCK_ActiveCustomer').getRecordTypeId();
+        acc.RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Customer').getRecordTypeId();
+        acc.Status__c = CUSTOMER_STATUS_ACTIVE;
         
         Pricebook2 pricebook = new Pricebook2(Name = acc.Name + '_' + acc.PLCK_SalesOrganisation_ERP__c, IsActive = true);
         insert pricebook;
@@ -27,8 +30,9 @@ public with sharing class PLCK_PriceLineServiceTest {
     private static void fetchStandardPriceLinesTest(){
         Account acc = PLCK_TestDataFactory.prepareAccounts(1, '000')[0];
         acc.PLCK_ExternalID__c = '00000000_1020';
-        acc.RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PLCK_ActiveCustomer').getRecordTypeId();
-        
+        acc.RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Customer').getRecordTypeId();
+        acc.Status__c = CUSTOMER_STATUS_ACTIVE;
+
         Pricebook2 pricebook = new Pricebook2(Name = acc.Name + '_' + acc.PLCK_SalesOrganisation_ERP__c, IsActive = true);
         insert pricebook;
 
@@ -51,8 +55,9 @@ public with sharing class PLCK_PriceLineServiceTest {
     private static void fetchStandardPriceLinesWithSearchTextTest(){
         Account acc = PLCK_TestDataFactory.prepareAccounts(1, '000')[0];
         acc.PLCK_ExternalID__c = '00000000_1020';
-        acc.RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PLCK_ActiveCustomer').getRecordTypeId();
-        
+        acc.RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Customer').getRecordTypeId();
+        acc.Status__c = CUSTOMER_STATUS_ACTIVE;
+
         Pricebook2 pricebook = new Pricebook2(Name = acc.Name + '_' + acc.PLCK_SalesOrganisation_ERP__c, IsActive = true);
         insert pricebook;
 
@@ -75,7 +80,8 @@ public with sharing class PLCK_PriceLineServiceTest {
     private static void fetchStandardPriceLinesWithListOfMaterialNumbersTest(){
         Account acc = PLCK_TestDataFactory.prepareAccounts(1, '000')[0];
         acc.PLCK_ExternalID__c = '00000000_1020';
-        acc.RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PLCK_ActiveCustomer').getRecordTypeId();
+        acc.RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Customer').getRecordTypeId();
+        acc.Status__c = CUSTOMER_STATUS_ACTIVE;
         
         Pricebook2 pricebook = new Pricebook2(Name = acc.Name + '_' + acc.PLCK_SalesOrganisation_ERP__c, IsActive = true);
         insert pricebook;
@@ -99,7 +105,8 @@ public with sharing class PLCK_PriceLineServiceTest {
     private static void fetchGroupPriceLinesTest(){
         Account acc = PLCK_TestDataFactory.prepareAccounts(1, 'PG1')[0];
         acc.PLCK_ExternalID__c = '00000000_1020';
-        acc.RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PLCK_ActiveCustomer').getRecordTypeId();
+        acc.RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Customer').getRecordTypeId();
+        acc.Status__c = CUSTOMER_STATUS_ACTIVE;
         
         Pricebook2 pricebook = new Pricebook2(Name = acc.Name + '_' + acc.PLCK_SalesOrganisation_ERP__c, IsActive = true);
         insert pricebook;
@@ -123,7 +130,8 @@ public with sharing class PLCK_PriceLineServiceTest {
     private static void fetchGroupPriceLinesWithSearchTextTest(){
         Account acc = PLCK_TestDataFactory.prepareAccounts(1, 'PG1')[0];
         acc.PLCK_ExternalID__c = '00000000_1020';
-        acc.RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PLCK_ActiveCustomer').getRecordTypeId();
+        acc.RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Customer').getRecordTypeId();
+        acc.Status__c = CUSTOMER_STATUS_ACTIVE;
         
         Pricebook2 pricebook = new Pricebook2(Name = acc.Name + '_' + acc.PLCK_SalesOrganisation_ERP__c, IsActive = true);
         insert pricebook;
@@ -147,7 +155,8 @@ public with sharing class PLCK_PriceLineServiceTest {
     private static void fetchGroupPriceLinesWithListOfMaterialNumbersTest(){
         Account acc = PLCK_TestDataFactory.prepareAccounts(1, 'PG1')[0];
         acc.PLCK_ExternalID__c = '00000000_1020';
-        acc.RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PLCK_ActiveCustomer').getRecordTypeId();
+        acc.RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Customer').getRecordTypeId();
+        acc.Status__c = CUSTOMER_STATUS_ACTIVE;
         
         Pricebook2 pricebook = new Pricebook2(Name = acc.Name + '_' + acc.PLCK_SalesOrganisation_ERP__c, IsActive = true);
         insert pricebook;

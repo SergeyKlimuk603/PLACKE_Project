@@ -1,5 +1,7 @@
 public with sharing class PLCK_FetchNewPricebookEntries {
     
+    public static final String CUSTOMER_STATUS_ACTIVE = 'Active';
+    
     @InvocableMethod(label='Fetch Newest Pricebook for Active Customer' description='Fetch Newest Pricebook for Active Customers from SAP with a specific sales org')
     public static List<String> fetchNewestPricebook(List<Id> idsList){
         List<String> result = new List<String>();
@@ -94,7 +96,7 @@ public with sharing class PLCK_FetchNewPricebookEntries {
     }
 
     public static void fetchNewestPricebookExecute(Map<Id,Account> accounts, Boolean isCalledByTrigger, Boolean isBeforeTrigger, List<String> result){
-        Id activeCustomerRecTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PLCK_ActiveCustomer').getRecordTypeId();
+        Id customerRecTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Customer').getRecordTypeId();
             
         Set<Id> accountIdsToProcess = new Set<Id>();
         Set<String> salesOrgs = new Set<String>();
@@ -104,7 +106,7 @@ public with sharing class PLCK_FetchNewPricebookEntries {
         List<Account> accountsToUpdateList = new List<Account>();
 
         for (Account acc : accounts.values()) {
-            if(acc.RecordTypeId == activeCustomerRecTypeId){
+            if(acc.RecordTypeId == customerRecTypeId && acc.Status__c == CUSTOMER_STATUS_ACTIVE){
                 if (!acc.PLCK_SalesOrganisation_ERP__c.isNumeric()) {
                     result.add('It is not necessary to fetch newest pricebook for Vision Accounts');
                     break;

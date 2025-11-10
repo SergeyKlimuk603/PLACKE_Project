@@ -16,10 +16,11 @@ public with sharing class PLCK_FetchNewPricebookEntriesTest {
     static void fetchNewestPricebookTest(){
         Account acc = PLCK_TestDataFactory.prepareAccounts(1, null)[0];
 
-        Id activeCustomerRecTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PLCK_ActiveCustomer').getRecordTypeId();
+        Id customerRecTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Customer').getRecordTypeId();
 
         String visionSalesOrg = '1350';
-        acc.RecordTypeId = activeCustomerRecTypeId;
+        acc.RecordTypeId = customerRecTypeId;
+        acc.Status__c = PLCK_FetchNewPricebookEntries.CUSTOMER_STATUS_ACTIVE;
         acc.PLCK_SalesOrganisation_ERP__c = '1350';
         acc.PLCK_ABCClass__c = 'A1';
         acc.PLCK_FetchPricebookCheck__c = true;
@@ -38,10 +39,11 @@ public with sharing class PLCK_FetchNewPricebookEntriesTest {
     static void fetchNewestPricebookExecuteTest(){
         Account acc = PLCK_TestDataFactory.prepareAccounts(1, null)[0];
 
-        Id activeCustomerRecTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PLCK_ActiveCustomer').getRecordTypeId();
+        Id customerRecTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Customer').getRecordTypeId();
 
         String visionSalesOrg = '1350';
-        acc.RecordTypeId = activeCustomerRecTypeId;
+        acc.RecordTypeId = customerRecTypeId;
+        acc.Status__c = PLCK_FetchNewPricebookEntries.CUSTOMER_STATUS_ACTIVE;
         acc.PLCK_SalesOrganisation_ERP__c = '1350';
         acc.PLCK_ABCClass__c = 'A1';
         acc.PLCK_FetchPricebookCheck__c = true;

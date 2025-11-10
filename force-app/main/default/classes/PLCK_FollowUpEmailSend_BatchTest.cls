@@ -1,5 +1,7 @@
 @isTest
 public without sharing class PLCK_FollowUpEmailSend_BatchTest {
+
+    private static final String CUSTOMER_STATUS_ACTIVE = 'Active';
     
     @TestSetup
     static void setup() {
@@ -20,8 +22,9 @@ public without sharing class PLCK_FollowUpEmailSend_BatchTest {
         System.runAs(u) {
             List<Account> accounts = PLCK_TestDataFactory.prepareAccounts(1, null);
             PLCK_TestDataFactory.createPricebookForProspectAccounts();
-            Id activeCustomerRecTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PLCK_ActiveCustomer').getRecordTypeId();
-            accounts[0].RecordTypeId = activeCustomerRecTypeId;
+            Id customerRecTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Customer').getRecordTypeId();
+            accounts[0].RecordTypeId = customerRecTypeId;
+            accounts[0].Status__c = CUSTOMER_STATUS_ACTIVE;
             accounts[0].PLCK_ERPSalesrepNumber__c = '9999';
             accounts.get(0).PLCK_PriceBook__c = [SELECT Id FROM Pricebook2 LIMIT 1].Id;
             insert accounts;
